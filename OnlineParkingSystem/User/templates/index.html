@@ -1,0 +1,227 @@
+{% extends 'base.html' %}
+{% block content %}
+     <div id="preloder">
+        <div class="loader"></div>
+    </div>
+    {% if message != None %}
+			<div style="width:100%;	height:50px;"class=" alert alert-success alert-dismissible">
+                <button type="button" class="close" data-dismiss="alert">&times;</button>
+							{{message}}
+        	</div>
+	{% endif %}
+    {% if error != None %}
+			<div style="width:100%;	height:50px;"class=" alert alert-danger alert-dismissible">
+                <button type="button" class="close" data-dismiss="alert">&times;</button>
+							{{error}}
+        	</div>
+	{% endif %}
+    <section class="hero-section">
+        <div class="hero-items owl-carousel">
+            <div class="single-hero-item set-bg" data-setbg="/static/img/parked-lamborghini-sports-coupe-2896135.jpg">
+            </div>
+            <div class="single-hero-item set-bg" data-setbg="/static/img/photo-of-parked-lime-green-lamborghini-2127733.jpg">
+            </div>
+            <div class="single-hero-item set-bg" data-setbg="/static/img/wall-car-vehicle-vintage-1897.jpg">
+            </div>
+        </div>
+        <div class="thumbnail-pic">
+            <div class="thumbs owl-carousel">
+                <div class="item">
+                    <img src="/static/img/parked-lamborghini-sports-coupe-2896135.jpg" alt="">
+                </div>
+                <div class="item">
+                    <img src="/static/img/photo-of-parked-lime-green-lamborghini-2127733.jpg" alt="">
+                </div>
+                <div class="item">
+                    <img src="/static/img/wall-car-vehicle-vintage-1897.jpg" alt="">
+                </div>
+            </div>
+        </div>
+    </section>
+    {% if role == "User" %}
+        <div  class="search-form">
+            <div class="container">
+                <div id="1" class="row" style="margin-bottom: 15px;">
+                    <div class="col-lg-12">
+                        <div class="search-form-text">
+                            <div class="search-text">
+                                <i class="fa fa-search"></i>
+                                Find Your Parking Space
+                            </div>
+                        </div>
+                        <form action="/User/showlanddetails/" method="GET" class="filter-form">
+                        {% csrf_token%}
+                            <div class="first-row" style="text-align:center">
+                                Pick Date : <input  placeholder="select date" type="date" style="margin-left: 12px;margin-right: 20px;padding-left: 15px;padding-right: 5px;border-radius:5px;background-color: lightgrey;height:35px;" name="rdate" min="{{tdate}}" max="{{ ldate }}" required>
+                                <input type="checkbox" id="ckb1"  style="margin-left: 12px;" onclick="getLocation()" required> <span style="margin-right: 20px;color:black">Enable Location</span>
+                                <input type="hidden" name="langitude" id="langitude">
+                                <input type="hidden" name="lattitude" id="lattitude">
+                                <button type="submit" class="btn btn-primary" style="background: #2cbdb8;">Search</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                
+                <div id="2" class="row" style="margin-bottom: 15px;">
+                    <div class="col-lg-12">
+                        <div class="search-form-text">
+                            <div class="search-text">
+                                <i class="fa fa-search"></i>
+                                Add Locations In Advance
+                            </div>
+                        </div>
+                        <form action="/User/addLocation/" method="POST" class="filter-form">
+                        {% csrf_token%}
+                            <div class="first-row" style="text-align:center">
+                                Location Name :<input  placeholder="Give Name" style="margin-left: 12px;margin-right: 20px;padding-left: 15px;padding-right: 5px;border-radius:5px;background-color: lightgrey;height:35px;" type="text" name="location_name" required>
+                                 <input type="checkbox" id="ckb2"  style="margin-left: 12px;" onclick="getLocation()" required> <span style="margin-right: 20px;color:black">Enable Location</span>
+                                 <input type="hidden" name="langitude" id="langitude1">
+                                 <input type="hidden" name="lattitude" id="lattitude1">                               
+                                <button type="submit" class="btn btn-primary" style="background: #2cbdb8;">Add Location</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% endif %}
+    <section class="howit-works spad">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="section-title">
+                        <span>About Us</span>
+                        <h2>How It Work</h2>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-4">
+                    <div class="single-howit-works">
+                        <img src="/static/img/howit-works/howit-works-1.png" alt="">
+                        <h4>Search Parking Space</h4>
+                        <p>Difficuty in managing and securing your vehicles. Then search place and register immediately for parking on our site.</p>
+                    </div>
+                </div>
+                <div class="col-lg-4">
+                    <div class="single-howit-works">
+                        <img src="/static/img/howit-works/howit-works-2.png" alt="">
+                        <h4>Add Your Parking Space</h4>
+                        <p>Pre-planning is the best way to easy our journey. So, Reserve place to secure your vehicles.</p>
+                    </div>
+                </div>
+                <div class="col-lg-4">
+                    <div class="single-howit-works">
+                        <img src="/static/img/howit-works/howit-works-3.png" alt="">
+                        <h4>Talk To Agent</h4>
+                        <p>Use this service to get any kind of help related to our system</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <script>
+        var langitude = document.getElementById("langitude");
+        var lattitude = document.getElementById("lattitude");
+        var langitude1 = document.getElementById("langitude1");
+        var lattitude1 = document.getElementById("lattitude1");
+        function getLocation() {
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(showPosition);
+        } else { 
+            x.innerHTML = "Geolocation is not supported by this browser.";
+        }
+        }
+        function getAvailablity() {
+            var x=document.getElementById("no_of_spot").value;
+            document.getElementById("availability").value = x;
+        }
+        function showPosition(position) {
+            lattitude.value = position.coords.latitude;
+            langitude.value = position.coords.longitude;
+            lattitude1.value = position.coords.latitude;
+            langitude1.value = position.coords.longitude;
+        }
+    </script>
+    <section class="agent-section spad">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="section-title">
+                        <span>We Are Eager To Help You</span>
+                        <h2>Our Agents</h2>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="agent-carousel owl-carousel">
+                    <div class="col-lg-3">
+                        <div class="single-agent">
+                            <div class="sa-pic">
+                                <img src="/static/img/agent/agent-2.jpg" alt="">
+                                <div class="hover-social">
+                                    <a href="#" class="twitter"><i class="fa fa-twitter"></i></a>
+                                    <a href="#" class="instagram"><i class="fa fa-instagram"></i></a>
+                                    <a href="#" class="facebook"><i class="fa fa-facebook"></i></a>
+                                </div>
+                            </div>
+                            <h5>Shubham Vekariya <span>Founder & CEO</span></h5>
+                        </div>
+                    </div>
+                    <div class="col-lg-3">
+                        <div class="single-agent">
+                            <div class="sa-pic">
+                                <img src="/static/img/agent/agent-2.jpg" alt="">
+                                <div class="hover-social">
+                                    <a href="#" class="twitter"><i class="fa fa-twitter"></i></a>
+                                    <a href="#" class="instagram"><i class="fa fa-instagram"></i></a>
+                                    <a href="#" class="facebook"><i class="fa fa-facebook"></i></a>
+                                </div>
+                            </div>
+                            <h5>Keval Talaviya <span>Developer</span></h5>
+                        </div>
+                    </div>
+                    <div class="col-lg-3">
+                        <div class="single-agent">
+                            <div class="sa-pic">
+                                <img src="/static/img/agent/agent-5.jpg" alt="">
+                                <div class="hover-social">
+                                    <a href="#" class="twitter"><i class="fa fa-twitter"></i></a>
+                                    <a href="#" class="instagram"><i class="fa fa-instagram"></i></a>
+                                    <a href="#" class="facebook"><i class="fa fa-facebook"></i></a>
+                                </div>
+                            </div>
+                            <h5>Nemish Zalavadiya <span>Company Agents</span></h5>
+                        </div>
+                    </div>
+                    <div class="col-lg-3">
+                        <div class="single-agent">
+                            <div class="sa-pic">
+                                <img src="/static/img/agent/agent-4.jpg" alt="">
+                                <div class="hover-social">
+                                    <a href="#" class="twitter"><i class="fa fa-twitter"></i></a>
+                                    <a href="#" class="instagram"><i class="fa fa-instagram"></i></a>
+                                    <a href="#" class="facebook"><i class="fa fa-facebook"></i></a>
+                                </div>
+                            </div>
+                            <h5>Yash Suhagiya <span>Saler Manager</span></h5>
+                        </div>
+                    </div>
+                    <div class="col-lg-3">
+                        <div class="single-agent">
+                            <div class="sa-pic">
+                                <img src="/static/img/agent/agent-3.jpg" alt="">
+                                <div class="hover-social">
+                                    <a href="#" class="twitter"><i class="fa fa-twitter"></i></a>
+                                    <a href="#" class="instagram"><i class="fa fa-instagram"></i></a>
+                                    <a href="#" class="facebook"><i class="fa fa-facebook"></i></a>
+                                </div>
+                            </div>
+                            <h5>Vipul Vyas <span>Saler Manager</span></h5>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    {% endblock %}

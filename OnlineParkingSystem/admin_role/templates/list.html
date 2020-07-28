@@ -1,0 +1,157 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<script>
+
+</script>
+<div style="align-items:center;"><h3 class="card-panel fray bg-primary" style="margin: 30px;padding: 10px 20px;text-align: center;align-items: center;"> Approval Needed</h3></div>
+	<div style="overflow-x:auto;margin-left: 30px;margin-right: 30px;">
+        <table class="table table-striped centered" >
+		<thead>
+     <tr class="table-primary">
+      <th class="card-panel teal" onclick="approve('address')" style="cursor: grab;">Address</th>
+      <th class="card-panel teal" onclick="approve('no_of_spot')" style="cursor: grab;">No Of Spots</th>
+      <th class="card-panel teal" onclick="approve('description')" style="cursor: grab;">Description</th>
+      <th class="card-panel teal" onclick="approve('price_per_hour')" style="cursor: grab;">Price_Per_Hour</th>
+      <th class="card-panel teal" onclick="approve('start_date')" style="cursor: grab;">Start_Date</th>
+      <th class="card-panel teal" onclick="approve('end_date')" style="cursor: grab;">End_Date</th>
+      <th class="card-panel teal" onclick="approve('lattitude')" style="cursor: grab;">Approve</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% if app == "approve" %}
+
+    {% endif %}
+    {% for user in users %}
+      <form action="/admin_role/approveLand/" method="POST">
+      {% csrf_token %}
+      <tr>
+        <input type="hidden" name="landid" value="{{ user.landid }}">
+        <td>{{ user.address }}</td>
+        <td>{{ user.no_of_spot }}</td>
+        <td>{{ user.description }}</td>
+        <td>{{ user.price_per_hour }}</td>
+        <td>{{ user.start_date }}</td>
+        <td>{{ user.end_date }}</td>
+        {% if user.verified %}<td><button type="submit" class="btn btn-success ">Verification Required</button></td>{% endif %}
+        {% if not user.verified %}<td><i class="fa fa-check" aria-hidden="true"></i> Done</td>{% endif %}
+      </tr>
+     </form>
+    {% endfor %}
+
+  </tbody>
+</table>
+        {% if not users %}
+            <div style="text-align:center;font-family:Christmas;margin:40px;" ><h3>Nothing to show</h3></div>
+        {% endif %}
+</div>
+<script>
+  
+
+  function approve($this){
+    console.log("button clicked");
+    var request_data = $this;
+    console.log("data: " + request_data);
+    var url = "{% url 'UserShortedView' %}";
+    console.log("url : "+url);
+    var id = $this;
+ 
+    document.location.href = '/admin_role/sortLand/?id='+ id;
+  }
+</script>
+<div  style="margin-left: 40%;">
+  {% if is_paginated %}
+  <ul class="pagination">
+    {% if page_obj.has_previous %}
+      <li style="padding: 18px;font-size: 18px;"><a href="?page={{ page_obj.previous_page_number }}"><span style="font-size: 20px;">&laquo;</span></a></li>
+    {% else %}
+      <li class="disabled" style="padding: 18px;"><span style="font-size: 20px;">&laquo;</span></li>
+    {% endif %}
+    {% for i in paginator.page_range %}
+      {% if page_obj.number == i %}
+        <li class="active btn btn-success"><span><h3>{{ i }} </h3><span class="sr-only">(current)</span></span></li>
+      {% else %}
+        <li class="btn" style="padding: 15px;color: black;font-size: 10px;"><a href="?page={{ i }}"><h3>{{ i }}</h3></a></li>
+      {% endif %}
+    {% endfor %}
+    {% if page_obj.has_next %}
+      <li style="padding: 18px;font-size: 8px;"><a href="?page={{ page_obj.next_page_number }}"><span style="font-size: 20px;">&raquo;</span></a></li>
+    {% else %}
+      <li class="disabled" style="padding: 18px;"><span style="font-size: 20px;">&raquo;</span></li>
+    {% endif %}
+  </ul>
+{% endif %}
+</div>
+</div>
+<div style="text-align:center;margin-top: 20px;">
+<div class="row">
+    <div class="col-md-6">
+    <a href="{% url 'Home' %}"><button class="btn btn-primary" style="margin-bottom:3%">Home</button></a>
+    </div>
+    <div class="col-md-6">
+        <select style="width:400px;" id="mySelect">
+            <option value="{% url 'getHistdata' %}">Users History</option>
+            <option value="{% url 'getScatterdata' %}">Landloads Payment History</option>
+        </select>
+    <button id="myBtn" class="btn btn-success" >Visualize</button>
+    </div>
+</div>
+
+<!-- The Modal -->
+<div id="myModal" class="modal">
+
+  <!-- Modal content -->
+  <div class="modal-content">
+    <div class="modal-header">
+
+      <h2 style="margin-left:27%;">Graphical Representation</h2>
+        <span class="close">&times;</span>
+    </div>
+    <div class="modal-body">
+        <img src="{% url 'getScatterdata' %}" id="visual" alt="Data Will Be Available Here">
+    </div>
+    <div class="modal-footer">
+      <h3 id="footer" style="margin-right:600px;">Modal Footer</h3>
+    </div>
+  </div>
+
+</div>
+        <script>
+            // Get the modal
+            var modal = document.getElementById("myModal");
+
+            // Get the button that opens the modal
+            var btn = document.getElementById("myBtn");
+            var select = document.getElementById("mySelect");
+            // Get the <span> element that closes the modal
+            var span = document.getElementsByClassName("close")[0];
+
+            // When the user clicks the button, open the modal
+            btn.onclick = function() {
+              var option = select.options[select.selectedIndex];
+              if (select.selectedIndex==0){
+              document.getElementById("footer").innerHTML = "User's History"
+              console.log("User's History")
+              }
+              else{
+              document.getElementById("footer").innerHTML = "Landload's History"
+              console.log("Landload's History")
+              }
+              console.log(option.value)
+              document.getElementById("visual").src=option.value;
+              modal.style.display = "block";
+            }
+            // When the user clicks on <span> (x), close the modal
+            span.onclick = function() {
+              modal.style.display = "none";
+            }
+
+            // When the user clicks anywhere outside of the modal, close it
+            window.onclick = function(event) {
+              if (event.target == modal) {
+                modal.style.display = "none";
+              }
+            }
+        </script>
+{% endblock %}
+

@@ -1,0 +1,49 @@
+{% extends 'base.html' %}
+{% block content %}
+  {% if message != None %}
+			<div style="width:100%;	height:50px;"class=" alert alert-success alert-dismissible">
+                <button type="button" class="close" data-dismiss="alert">&times;</button>
+							{{message}}
+        	</div>
+	{% endif %}     
+  {% if error != None %}
+			<div style="width:100%;	height:50px;"class=" alert alert-danger alert-dismissible">
+                <button type="button" class="close" data-dismiss="alert">&times;</button>
+							{{error}}
+        	</div>
+	{% endif %}     
+    {% for i in list %}
+       
+
+
+<div class="card mb-3" style="width:90%;margin:0 auto;float:none;background-color:#acecea;">
+  <div class="row no-gutters">
+    <div class="col-md-4">
+	  <img class="card-img" style="width:100%;height:100%;" src="{{i.image.url}}" alt="Card image">
+    </div>
+    <div class="col-md-8">
+      <div class="card-body">
+                <p style="color:black;font-size:20px;">City : {{i.city}} </p>
+				<p style="color:black;font-size:20px;">State : {{i.state}} </p>
+				<p style="color:black;font-size:20px;">Area : {{i.area}}</p>
+                <p style="color:black;font-size:20px;">Price : {{i.price_per_hour}}</p>
+                <p style="color:black;font-size:20px;">Spots : {{i.no_of_spot}}</p>
+                <p style="color:black;font-size:20px;">Verified : {% if not i.verified %}Yes{% endif%} {% if i.verified %}Not verified{% endif%}</p>
+                <p style="color:black;font-size:20px;">Date : {{i.start_date}} to {{i.end_date}}</p>
+                <p style="color:black;font-size:20px;">Description : {{i.description}}</p>
+				<br/>
+                <a class="btn btn-primary" href="/Landlord/showhistory/?landid={{ i.landid }}" >Show History</a>
+                <a class="btn btn-primary" href="/Landlord/editlanddetail/?landid={{ i.landid }}" >Edit Land Detail</a>
+				<a class="btn btn-primary" href="/Landlord/deleteland/?landid={{ i.landid }}" >Delete Land</a>
+                <a class="btn btn-primary" href="/Landlord/payment/?landid={{ i.landid }}" >Payment</a>
+
+				
+      </div>
+    </div>
+  </div>
+</div>       		
+{% endfor %}
+    {% if not list %}
+            <div style="text-align:center;font-family:Christmas;margin:40px;" ><h3>No Land Added Yet</h3></div>
+        {% endif %}
+{% endblock %}

@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+
+	<title>Edit Land Details</title>	
+	<link rel="stylesheet" type="text/css" href="/static/vendor/bootstrap/css/bootstrap.min.css">
+	<link type="text/css" rel="stylesheet" href="/static/css/AddLandDetail.css" />
+	<style>
+		input::-webkit-outer-spin-button,
+		input::-webkit-inner-spin-button {
+		-webkit-appearance: none;
+		margin: 0;
+		}
+		
+		input[type=number] {
+		-moz-appearance: textfield;
+		}
+	</style>
+</head>
+<body>
+	<div style="text-align:center;margin-bottom: -30px;margin-top: 40px;">
+		<a href="{% url 'landlist' %}"><button class="btn btn-primary" style="height:50px;width:200px;font-size:26px;color:rgb(255, 198, 0);background-color:#212529;margin-bottom:3%">Back</button></a>
+	</div>
+	<div id="booking" class="section">
+		<div class="section-center">
+			<div class="container">
+				<div class="row" style="display:block;">
+					<div class="booking-form">
+						<div class="booking-bg"></div>
+						<form action="/Landlord/editlanddetail/" method="POST">
+						{% csrf_token%}
+							<div class="form-header">
+								<h2>EDIT PARKING DETAILS</h2>
+							</div>
+							{{ form.non_field_errors }}
+							{% if message != None %}
+								<div style="width:100%;	height:50px;"class=" alert alert-danger alert-dismissible">
+									<button type="button" class="close" data-dismiss="alert">&times;</button>
+												{{message}}
+								</div>
+							{% endif %}
+							<div class="form-group">
+								{{ form.address.errors }}
+								{{ form.address }}
+								<span class="form-label" for="{{ form.address.id_for_label }}">Address</span>
+							</div>
+							<div class="form-group">
+								{{ form.no_of_spot.errors }}
+								{{ form.no_of_spot }}
+								<span class="form-label" for="{{ form.no_of_spot.id_for_label }}">no_of_spot</span>
+							</div>
+							<div class="form-group">
+								{{ form.description.errors }}
+								{{ form.description }}
+								<span class="form-label" for="{{ form.description.id_for_label }}">description</span>
+							</div>
+							<div class="form-group">
+								{{ form.price_per_hour.errors }}
+								{{ form.price_per_hour }}
+								<span class="form-label" for="{{ form.price_per_hour.id_for_label }}">price_per_hour( $ )</span>
+							</div>
+							<div class="row">
+								<div class="col">
+									<div class="form-group">
+									{{ form.area.errors }}
+									{{ form.area }}
+									<span class="form-label" for="{{ form.area.id_for_label }}">area</span>
+									</div>
+								</div>
+								<div class="col">
+									<div class="form-group">
+										{{ form.city.errors }}
+										{{ form.city }}
+										<span class="form-label" for="{{ form.city.id_for_label }}">city</span>
+									</div>
+								</div>
+								<div class="col">
+									<div class="form-group">
+										{{ form.state.errors }}
+										{{ form.state }}
+										<span class="form-label" for="{{ form.state.id_for_label }}">state</span>
+									</div>
+								</div>
+							</div>
+							<div class="row">
+									{{ form.availability }}
+									{{ form.userid }}
+                                    <input type="hidden" name="landid" value="{{ landid }}" />
+								<div class="col">
+										<div class="form-btn">
+											<button class="submit-btn">Edit Now</button>
+										</div>
+								</div>
+							</div>
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<script src="/static/vendor/jquery/jquery-3.2.1.min.js"></script>
+
+	<script>
+		$(document).ready(function(){
+  		$("#no_of_spot").change(function(){
+    	$("#availability").val()=$("#no_of_spot").val());
+  });
+});
+	</script>
+	
+<script>
+var langitude = document.getElementById("langitude");
+var lattitude = document.getElementById("lattitude");
+function getLocation() {
+  if (navigator.geolocation) {
+    navigator.geolocation.getCurrentPosition(showPosition);
+  } else { 
+    x.innerHTML = "Geolocation is not supported by this browser.";
+  }
+}
+function getAvailablity() {
+    var x=document.getElementById("no_of_spot").value;
+	document.getElementById("availability").value = x;
+}
+function showPosition(position) {
+	lattitude.value = position.coords.latitude;
+	langitude.value = position.coords.longitude;
+}
+</script>
+<script>
+		$('.form-control').each(function () {
+			floatedLabel($(this));
+		});
+
+		$('.form-control').on('input', function () {
+			floatedLabel($(this));
+		});
+
+		function floatedLabel(input) {
+			var $field = input.closest('.form-group');
+			if (input.val()) {
+				$field.addClass('input-not-empty');
+			} else {
+				$field.removeClass('input-not-empty');
+			}
+		}
+	</script>
+</body>
+</html>
